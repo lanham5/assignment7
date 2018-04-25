@@ -135,16 +135,19 @@ public class Cheaters {
         
     }
     
-    public static void main(String[] args) throws IOException {
+    public static double[][] run() throws IOException {
         Cheaters cheat = new Cheaters();
         cheat.cleanFile();
         cheat.numFiles++;
-        cheat.createNGramMap(3);
+        cheat.createNGramMap(5);
         cheat.createSimilarityMatrix();
         cheat.outputSimilarities(50);
-
+        return similarities;
     }
     
+    public static List<String> getFileList(){
+        return fileList;
+    }
     
     
 }
