@@ -85,12 +85,12 @@ public class Model {
         return allEdges;
     }
 
-    public void addCell(String id, CellType type) {
+    public void addCell(String id, CellType type, int size) {
 
         switch (type) {
 
         case RECTANGLE:
-            RectangleCell rectangleCell = new RectangleCell(id);
+            RectangleCell rectangleCell = new RectangleCell(id, size);
             addCell(rectangleCell);
             break;
 
@@ -104,20 +104,20 @@ public class Model {
         }
     }
 
-    private void addCell( Cell cell) {
+    private void addCell(Cell cell) {
 
         addedCells.add(cell);
 
-        cellMap.put( cell.getCellId(), cell);
+        cellMap.put(cell.getCellId(), cell);
 
     }
 
-    public void addEdge( String sourceId, String targetId) {
+    public void addEdge(String sourceId, String targetId, double lineWidth) {
 
-        Cell sourceCell = cellMap.get( sourceId);
-        Cell targetCell = cellMap.get( targetId);
-
-        Edge edge = new Edge( sourceCell, targetCell);
+        Cell sourceCell = cellMap.get(sourceId);
+        Cell targetCell = cellMap.get(targetId);
+        
+        Edge edge = new Edge(sourceCell, targetCell, lineWidth);
 
         addedEdges.add( edge);
 

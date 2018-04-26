@@ -16,14 +16,14 @@ import com.fxgraph.graph.Cell;
 
 public class RectangleCell extends Cell {
 
-    public RectangleCell( String id) {
-        super( id);
+    public RectangleCell(String id, int size) {
+        super(id);
 
-        Rectangle view = new Rectangle( 50,50);
+        Rectangle view = new Rectangle(size,size);
 
         view.setStroke(Color.DODGERBLUE);
         view.setFill(Color.DODGERBLUE);
-
+        
         setView( view);
 
     }

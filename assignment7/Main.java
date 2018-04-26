@@ -16,6 +16,7 @@ import com.fxgraph.graph.Model;
 import com.fxgraph.layout.base.Layout;
 import com.fxgraph.layout.random.RandomLayout;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,27 +52,34 @@ public class Main extends Application {
     private void addGraphComponents() {
 
         Model model = graph.getModel();
-
+        List<Integer> numConnections = new ArrayList<>();
         graph.beginUpdate();
         
         try {
             adjacencyList = Cheaters.run();
-            fileList = Cheaters.getFileList();           
+            fileList = Cheaters.getFileList();
+            
+            double maxVal = 0;
             for(int i = 0; i < adjacencyList.length; i++){
                 boolean noConnections = true;
-                for(int j = 0; j < adjacencyList[0].length; j++){
-                    if(j!=i && adjacencyList[i][j] > 0){
+                numConnections.add(0);
+                for(int j = 0; j < adjacencyList[0].length; j++){                   
+                    if(j!=i && adjacencyList[i][j] > 0){                       
+                        numConnections.set(i, numConnections.get(i) + 1);
+                        if(adjacencyList[i][j] > maxVal){
+                            maxVal = adjacencyList[i][j];
+                        }
                         noConnections = false;
                     }
                 }
                 if(!noConnections){
-                    model.addCell(fileList.get(i), CellType.RECTANGLE);
+                    model.addCell(fileList.get(i), CellType.RECTANGLE, (int) (((.5*Math.log10((double) numConnections.get(i)/adjacencyList.length)+1)*90)+20));
                 }
             }      
             for(int i = 0; i < adjacencyList.length; i++){               
                 for(int j = 0; j < adjacencyList[0].length && j<i; j++){
                     if(adjacencyList[i][j] > 0){
-                        model.addEdge(fileList.get(i), fileList.get(j));
+                        model.addEdge(fileList.get(i), fileList.get(j), (adjacencyList[i][j]*4)/maxVal);
                     }
                 }
             }
