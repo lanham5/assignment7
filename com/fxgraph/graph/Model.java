@@ -85,12 +85,12 @@ public class Model {
         return allEdges;
     }
 
-    public void addCell(String id, CellType type, int size) {
+    public void addCell(String id, CellType type, int size, int color) {
 
         switch (type) {
 
         case RECTANGLE:
-            RectangleCell rectangleCell = new RectangleCell(id, size);
+            RectangleCell rectangleCell = new RectangleCell(id, size, color);
             addCell(rectangleCell);
             break;
 

@@ -13,18 +13,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import com.fxgraph.graph.Cell;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 public class RectangleCell extends Cell {
 
-    public RectangleCell(String id, int size) {
+    public RectangleCell(String id, int size, int color) {
         super(id);
 
         Rectangle view = new Rectangle(size,size);
 
-        view.setStroke(Color.DODGERBLUE);
-        view.setFill(Color.DODGERBLUE);
         
-        setView( view);
+        if(color == 1){
+            view.setStroke(Color.RED);
+            view.setFill(Color.RED);
+        } else {
+            view.setStroke(Color.DODGERBLUE);
+            view.setFill(Color.DODGERBLUE);
+        }
+        StackPane stack = new StackPane();
+        stack.getChildren().addAll(view, new Text(id));
+        setView(stack);
 
     }
 

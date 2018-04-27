@@ -25,7 +25,7 @@ import java.util.TreeMap;
  */
 public class Cheaters {
     
-    File dir = new File(System.getProperty("user.dir") + "\\sm_doc_set\\sm_doc_set");
+    File dir = new File(System.getProperty("user.dir") + "\\med_doc_set\\med_doc_set");
     File[] directoryListing = dir.listFiles();
     static Map<String, String> files = new HashMap<>();
     static Map<String, ArrayList<String>> nGramWords = new HashMap<>();

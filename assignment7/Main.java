@@ -14,7 +14,7 @@ import com.fxgraph.graph.CellType;
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.Model;
 import com.fxgraph.layout.base.Layout;
-import com.fxgraph.layout.random.RandomLayout;
+import com.fxgraph.layout.random.GridLayout;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class Main extends Application {
 
         addGraphComponents();
 
-        Layout layout = new RandomLayout(graph);
+        Layout layout = new GridLayout(graph);
         layout.execute();
 
     }
@@ -58,13 +58,14 @@ public class Main extends Application {
         try {
             adjacencyList = Cheaters.run();
             fileList = Cheaters.getFileList();
-            
+            final int MIN_SIMILARITY = 0;
+            final int MAX_CONNECTIONS = 12;
             double maxVal = 0;
             for(int i = 0; i < adjacencyList.length; i++){
                 boolean noConnections = true;
                 numConnections.add(0);
                 for(int j = 0; j < adjacencyList[0].length; j++){                   
-                    if(j!=i && adjacencyList[i][j] > 0){                       
+                    if(j!=i && adjacencyList[i][j] > MIN_SIMILARITY){                       
                         numConnections.set(i, numConnections.get(i) + 1);
                         if(adjacencyList[i][j] > maxVal){
                             maxVal = adjacencyList[i][j];
@@ -73,12 +74,16 @@ public class Main extends Application {
                     }
                 }
                 if(!noConnections){
-                    model.addCell(fileList.get(i), CellType.RECTANGLE, (int) (((.5*Math.log10((double) numConnections.get(i)/adjacencyList.length)+1)*90)+20));
+                    if(numConnections.get(i) > MAX_CONNECTIONS){
+                        model.addCell(fileList.get(i), CellType.RECTANGLE, (int) (((.5*Math.log10((double) numConnections.get(i)/adjacencyList.length)+1)*90)+20), 1);
+                    } else {
+                        model.addCell(fileList.get(i), CellType.RECTANGLE, (int) (((.5*Math.log10((double) numConnections.get(i)/adjacencyList.length)+1)*90)+20), 0);
+                    }
                 }
             }      
             for(int i = 0; i < adjacencyList.length; i++){               
                 for(int j = 0; j < adjacencyList[0].length && j<i; j++){
-                    if(adjacencyList[i][j] > 0){
+                    if(adjacencyList[i][j] > MIN_SIMILARITY){
                         model.addEdge(fileList.get(i), fileList.get(j), (adjacencyList[i][j]*4)/maxVal);
                     }
                 }
@@ -86,21 +91,6 @@ public class Main extends Application {
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        model.addCell("Cell A", CellType.RECTANGLE);
-//        model.addCell("Cell B", CellType.RECTANGLE);
-//        model.addCell("Cell C", CellType.RECTANGLE);
-//        model.addCell("Cell D", CellType.TRIANGLE);
-//        model.addCell("Cell E", CellType.TRIANGLE);
-//        model.addCell("Cell F", CellType.RECTANGLE);
-//        model.addCell("Cell G", CellType.RECTANGLE);
-//
-//        model.addEdge("Cell A", "Cell B");
-//        model.addEdge("Cell A", "Cell C");
-//        model.addEdge("Cell B", "Cell C");
-//        model.addEdge("Cell C", "Cell D");
-//        model.addEdge("Cell B", "Cell E");
-//        model.addEdge("Cell D", "Cell F");
-//        model.addEdge("Cell D", "Cell G");
 
         graph.endUpdate();
 
