@@ -11,11 +11,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import static java.lang.System.out;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 //s
@@ -110,38 +114,74 @@ public class Cheaters {
      * 
      * @param numberofLines == -1 will output all similarities in the matrix
      */
-    public void outputSimilarities(int numberofLines){
-        SortedMap<Double, List<String>> similarityPairs = new TreeMap<>();
+    public void outputSimilarities(int minSimilarities, int numberofLines){
+        Map<List<String>, Double> unsortedMap = new HashMap<>();
         for(int i = 0; i < similarities.length; i++){
             for(int j = 0; j < similarities[0].length; j++){
                 if(j > i){
                     List<String> pair = new ArrayList<>();
                     pair.add(fileList.get(i));
                     pair.add(fileList.get(j));
-                    similarityPairs.put(similarities[i][j], pair);
+                    unsortedMap.put(pair, similarities[i][j]);
                 }
             }
         }
-        int counter = 0;
-        for(int i = similarityPairs.keySet().size() - 1; i > -1; i--){
-            if(numberofLines == -1 || counter < numberofLines){
-                System.out.println(similarityPairs.keySet().toArray()[i] + ": " + similarityPairs.values().toArray()[i].toString());
-            }
-            counter++;
-        }
-    }
-    public void displaySimilarities() {
         
-        
+        Map<List<String>, Double> sortedMapDesc = sortByComparator(unsortedMap, false);
+        printMap(sortedMapDesc, minSimilarities, numberofLines);
+
     }
     
-    public static double[][] run() throws IOException {
+    private static Map<List<String>, Double> sortByComparator(Map<List<String>, Double> unsortMap, final boolean order)
+    {
+
+        List<Entry<List<String>, Double>> list = new LinkedList<Entry<List<String>, Double>>(unsortMap.entrySet());
+
+        // Sorting the list based on values
+        Collections.sort(list, new Comparator<Entry<List<String>, Double>>()
+        {
+            public int compare(Entry<List<String>, Double> o1,
+                    Entry<List<String>, Double> o2)
+            {
+                if (order)
+                {
+                    return o1.getValue().compareTo(o2.getValue());
+                }
+                else
+                {
+                    return o2.getValue().compareTo(o1.getValue());
+
+                }
+            }
+        });
+
+        // Maintaining insertion order with the help of LinkedList
+        Map<List<String>, Double> sortedMap = new LinkedHashMap<List<String>, Double>();
+        for (Entry<List<String>, Double> entry : list)
+        {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
+
+    public static void printMap(Map<List<String>, Double> map, int minSimilarity, int numberOfLines){
+        int count = 0;
+        for (Entry<List<String>, Double> entry : map.entrySet()){
+            if(entry.getValue() > minSimilarity && (count < numberOfLines || numberOfLines == -1)){
+                System.out.println(entry.getValue() + ": " + entry.getKey().toString());
+            }
+            count++;
+        }
+    }
+    
+    public static double[][] run(int nGramLength, int minSimilarities, int topFiles) throws IOException {
         Cheaters cheat = new Cheaters();
         cheat.cleanFile();
         cheat.numFiles++;
-        cheat.createNGramMap(5);
+        cheat.createNGramMap(nGramLength);
         cheat.createSimilarityMatrix();
-        cheat.outputSimilarities(50);
+        cheat.outputSimilarities(minSimilarities, -1);
         return similarities;
     }
     

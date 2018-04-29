@@ -26,6 +26,9 @@ public class Main extends Application {
     Graph graph = new Graph();
     static double[][] adjacencyList;
     static List<String> fileList;
+    static String filePath;
+    static int nGramLength;
+    static int minSimilarities;
     
     @Override
     public void start(Stage primaryStage) {       
@@ -56,7 +59,7 @@ public class Main extends Application {
         graph.beginUpdate();
         
         try {
-            adjacencyList = Cheaters.run();
+            adjacencyList = Cheaters.run(nGramLength, minSimilarities, -1);
             fileList = Cheaters.getFileList();
             final int MIN_SIMILARITY = 0;
             final int MAX_CONNECTIONS = 12;
@@ -97,6 +100,15 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        if(args != null && args.length == 3){
+            filePath = args[0];
+            nGramLength = Integer.parseInt(args[1]);
+            minSimilarities = Integer.parseInt(args[2]);
+        } else {
+            nGramLength = 5;
+            minSimilarities = 200;
+        }
+        
         launch(args);
 //        Main main = new Main();
 //        main.addGraphComponents();
