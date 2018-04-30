@@ -29,15 +29,17 @@ import java.util.TreeMap;
  */
 public class Cheaters {
     
-    File dir = new File(System.getProperty("user.dir") + "\\med_doc_set\\med_doc_set");
-    File[] directoryListing = dir.listFiles();
+    static File dir;
+    static File[] directoryListing;
     static Map<String, String> files = new HashMap<>();
     static Map<String, ArrayList<String>> nGramWords = new HashMap<>();
     static double[][] similarities;
     static List<String> fileList;
-    int numFiles = 0;
+    static int numFiles = 0;
     
-    public void cleanFile() throws IOException {
+    public static void cleanFile() throws IOException {
+        System.out.println(System.getProperty("user.dir") + "\\sm_doc_set\\sm_doc_set");
+        directoryListing = dir.listFiles();
         for (File child : directoryListing) {
             numFiles++;
             BufferedReader in = (new BufferedReader(new FileReader(child)));
@@ -53,7 +55,7 @@ public class Cheaters {
         }
     }
     
-    public void createNGramMap(int N){
+    public static void createNGramMap(int N){
         String[] wordList;
         String consecutiveWords;
         String cleanedDoc;
@@ -78,7 +80,7 @@ public class Cheaters {
         }
     }
     
-    public void createSimilarityMatrix(){
+    public static void createSimilarityMatrix(){
         similarities = new double[files.keySet().size()][files.keySet().size()];
         fileList = new ArrayList<>();
         int[] totalOccurences = new int[files.keySet().size()];
@@ -110,11 +112,12 @@ public class Cheaters {
 //            }
 //        }       
     }
+    
     /**
      * 
      * @param numberofLines == -1 will output all similarities in the matrix
      */
-    public void outputSimilarities(int minSimilarities, int numberofLines){
+    public static void outputSimilarities(int minSimilarities, int numberofLines){
         Map<List<String>, Double> unsortedMap = new HashMap<>();
         for(int i = 0; i < similarities.length; i++){
             for(int j = 0; j < similarities[0].length; j++){
@@ -175,13 +178,15 @@ public class Cheaters {
         }
     }
     
-    public static double[][] run(int nGramLength, int minSimilarities, int topFiles) throws IOException {
-        Cheaters cheat = new Cheaters();
-        cheat.cleanFile();
-        cheat.numFiles++;
-        cheat.createNGramMap(nGramLength);
-        cheat.createSimilarityMatrix();
-        cheat.outputSimilarities(minSimilarities, -1);
+    public static double[][] run(String filePath, int nGramLength, int minSimilarities, int topFiles) throws IOException { 
+        System.out.println("testerasdfsdlfk;lka");
+        dir = new File(filePath + "\\sm_doc_set\\sm_doc_set");
+        System.out.println("filepath again: " + filePath + "\\sm_doc_set\\sm_doc_set");
+        cleanFile();
+        numFiles++;
+        createNGramMap(nGramLength);
+        createSimilarityMatrix();
+        outputSimilarities(minSimilarities, -1);
         return similarities;
     }
     

@@ -59,9 +59,9 @@ public class Main extends Application {
         graph.beginUpdate();
         
         try {
-            adjacencyList = Cheaters.run(nGramLength, minSimilarities, -1);
+            adjacencyList = Cheaters.run(filePath, nGramLength, minSimilarities, -1);
             fileList = Cheaters.getFileList();
-            final int MIN_SIMILARITY = 0;
+            final int MIN_SIMILARITY = minSimilarities;
             final int MAX_CONNECTIONS = 12;
             double maxVal = 0;
             for(int i = 0; i < adjacencyList.length; i++){
@@ -104,9 +104,13 @@ public class Main extends Application {
             filePath = args[0];
             nGramLength = Integer.parseInt(args[1]);
             minSimilarities = Integer.parseInt(args[2]);
+        } else if(args != null && args.length == 2){
+            filePath = args[0];
+            nGramLength = Integer.parseInt(args[1]);
         } else {
-            nGramLength = 5;
-            minSimilarities = 200;
+            filePath = "C:\\Users\\Jared\\Desktop\\Assignment7Files";
+            nGramLength = 15;
+            minSimilarities = 700;
         }
         
         launch(args);
